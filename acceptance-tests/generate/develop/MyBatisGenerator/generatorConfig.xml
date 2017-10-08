@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="schema" defaultModelType="hierarchical">
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <plugin type="com.zomu.t.mbg.uniquename.plugin.UniqueNamePlugin" />
+
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/tmsdb"
+                        userId="root" password="password"/>
+
+        <javaModelGenerator targetPackage="src/main/java" targetProject="."/>
+
+        <sqlMapGenerator targetPackage="src/main/java" targetProject="."></sqlMapGenerator>
+        <javaClientGenerator targetPackage="src/main/java" targetProject="." type="XMLMAPPER" />
+
+
+        <table tableName="PERSON" enableSelectByExample="true" enableDeleteByExample="true"
+               enableUpdateByExample="true" enableCountByExample="true"
+               enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+               enableDeleteByPrimaryKey="true" enableInsert="true" escapeWildcards="true"/>
+    </context>
+</generatorConfiguration>

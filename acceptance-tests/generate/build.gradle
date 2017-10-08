@@ -1,0 +1,83 @@
+buildscript {
+    dependencies {
+        classpath 'com.h2database:h2:1.4.191'
+        classpath 'mysql:mysql-connector-java:5.1.44'
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "4.2.0"
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+ext {
+
+    // MyBatis
+    myBatisVersion = '3.4.5'
+
+    // MyBatisGenerator
+    myBatisGeneratorVersion = '1.3.5'
+
+    // Mysql
+    mySqlConnectorJavaVersion = '5.1.44'
+}
+
+configurations {
+    myBatisGenerator
+}
+
+repositories {
+    mavenCentral();
+    jcenter()
+}
+
+dependencies {
+
+    //  MyBatis
+    //compile group: 'org.mybatis', name: 'mybatis', version: "${myBatisVersion}"
+
+    compile group: 'com.h2database', name: 'h2', version: '1.4.191'
+
+    // MyBatisGenerator
+    myBatisGenerator group: 'org.mybatis.generator', name: 'mybatis-generator-core', version: "${myBatisGeneratorVersion}"
+    myBatisGenerator group: 'mysql', name: 'mysql-connector-java', version: "${mySqlConnectorJavaVersion}"
+    myBatisGenerator group: 'com.h2database', name: 'h2', version: '1.3.148'
+    myBatisGenerator project(":module")
+}
+
+task generateMyBatisMaterials(type: JavaExec) {
+
+    classpath = configurations.myBatisGenerator
+    main = 'org.mybatis.generator.api.ShellRunner'
+    args = [
+            "-configfile",
+            "${project.file("develop/MyBatisGenerator/generatorConfig.xml")}",
+            "-overwrite"
+    ]
+}
+generateMyBatisMaterials.dependsOn("dbrelease")
+
+flyway {
+    //url = 'jdbc:h2:mem:hoge;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE'
+    url= 'jdbc:mysql://localhost:3306/tmsdb'
+    user = 'root'
+    password = 'password'
+    driver = 'com.mysql.jdbc.Driver'
+}
+
+task dbrelease() {
+    doLast {
+        flywayRepair.execute()
+        flywayMigrate.execute()
+        flywayInfo.execute()
+    }
+}
+
+generateMyBatisMaterials.group = 'mybatis'
+
+//jar {
+//    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+//}

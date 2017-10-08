@@ -1,0 +1,30 @@
+version: "3"
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - frontend
+  database:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    hostname: dbserver
+    environment:
+        MYSQL_DATABASE: tmsdb
+        MYSQL_ROOT_PASSWORD: password
+    networks:
+      - frontend
+#  rest:
+#    image: openjdk:8-jdk-alpine
+#    ports:
+#     - "8081:8081"
+#    networks:
+#      - frontend
+networks:
+  frontend:
+volumes:
+  rest-data:
+  redis-data:
+  database-data:

@@ -1,0 +1,3 @@
+rootProject.name = "mbg-uniquename-plugin"
+include "module"
+include "acceptance-tests:generate"
